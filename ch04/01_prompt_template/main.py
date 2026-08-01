@@ -23,5 +23,5 @@ while True:
     if user_input.lower() == "exit":
         break
 
-    for chunk in chain.stream(prompt.invoke({"question": user_input})):
+    for chunk in chain.stream({"question": user_input}):
         print(chunk, end="", flush=True)

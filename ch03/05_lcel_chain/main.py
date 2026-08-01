@@ -23,7 +23,7 @@ while True:
         break
 
     # 6. 체인 실행 및 결과 처리
-    response = chain.invoke(prompt.invoke({"question": user_input}))
+    response = chain.invoke({"question": user_input})
 
     # 7. JSON 부분만 추출해서 화면에 출력
     print(response)
