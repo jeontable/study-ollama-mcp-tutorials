@@ -1,6 +1,7 @@
-from langchain.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_ollama import ChatOllama
+
 
 # 1. 프롬프트 템플릿 정의
 prompt = ChatPromptTemplate.from_template(
@@ -22,5 +23,5 @@ while True:
     if user_input.lower() == "exit":
         break
 
-    for chunk in chain.stream({"question": user_input}):
+    for chunk in chain.stream(prompt.invoke({"question": user_input})):
         print(chunk, end="", flush=True)
