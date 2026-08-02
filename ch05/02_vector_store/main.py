@@ -1,5 +1,5 @@
 from langchain_ollama import OllamaEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain_chroma import Chroma
 
 # 1. 올라마 임베딩 모델을 사용할 수 있도록 준비
 bge_embed = OllamaEmbeddings(model="bge-m3")
@@ -13,7 +13,10 @@ knowledge = [
 ]
 print("이번달 가계부", knowledge)
 
-vector_store = FAISS.from_texts(knowledge, embedding=bge_embed)
+vector_store = Chroma.from_texts(
+    knowledge,
+    embedding=bge_embed
+)
 retriever = vector_store.as_retriever(search_kwargs={"k": 2})
 
 # 3. 사용자로부터 질문 입력 받음

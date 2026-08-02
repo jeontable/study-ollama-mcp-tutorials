@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "Ollama, LangChain, FAISS, PDF 문서 임베딩 및 질의응답 챗봇 예제 (ch07/01_tracing_project)"
 requires-python = ">=3.10"
 dependencies = [
-    "faiss-cpu>=1.14.3",
-    "langchain-community>=0.4.2",
+    "langchain-chroma>=1.1.0",
     "langchain-ollama>=1.1.0",
 ]
