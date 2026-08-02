@@ -4,7 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 # 1. 올라마 임베딩 모델들을 사용할 수 있도록 준비
 bge_embed = OllamaEmbeddings(model="bge-m3")
 nomic_embed = OllamaEmbeddings(model="nomic-embed-text")
-llm_embed = OllamaEmbeddings(model="qwen3:8b")
+llm_embed = OllamaEmbeddings(model="qwen3-embedding")
 
 # 2. 사용자로부터 문장 3개를 입력 받음
 sentences = [input(f"문장 {i + 1}을 입력하세요: ") for i in range(3)]
