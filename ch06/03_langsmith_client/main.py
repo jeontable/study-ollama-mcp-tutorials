@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from langsmith import Client
 from langchain_ollama import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage
 
 # 1. 환경 변수 로드
@@ -10,7 +11,7 @@ LANGSMITH_API_KEY = os.getenv("LANGSMITH_API_KEY")
 
 # 2. 랭스미스 클라이언트트 초기화 및 프롬프트 불러오기
 client = Client(api_key=LANGSMITH_API_KEY)
-prompt = client.pull_prompt("hardkothari/prompt-maker", include_model=False)
+prompt = client.pull_prompt("hardkothari/prompt-maker", include_model=False, dangerously_pull_public_prompt=True)
 
 # 3. 간단한 원본 프롬프트와 요청
 short_prompt = "LLM는 무엇인가?"
@@ -18,6 +19,7 @@ task = "한국어로 구체적으로 질문에 대한 프롬프트를 작성해�
 
 # 4. 올라마 모델 초기화
 llm = ChatOllama(model="qwen3:8b", temperature=0)
+#llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
 
 # 5. 프롬프트 템플릿에 변수 주입하여 메시지 생성
 messages = prompt.invoke({

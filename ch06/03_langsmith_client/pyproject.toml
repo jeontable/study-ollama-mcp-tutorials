@@ -3,9 +3,9 @@ name = "ollama-mcp-tutorial"
 version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [
-    "langchain-core==0.3.61",
-    "langchain-ollama==0.3.3",
-    "langchain==0.3.25",
-    "python-dotenv",
-    "langchain-community"
+    "langchain-core>=1.5.3",
+    "langchain-google-genai>=4.3.2",
+    "langchain-ollama>=1.1.0",
+    "langsmith>=0.10.15",
+    "python-dotenv>=1.2.2",
 ]
