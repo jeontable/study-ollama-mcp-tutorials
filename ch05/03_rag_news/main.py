@@ -3,7 +3,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 
 from langchain_ollama import OllamaEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain_chroma import Chroma
 
 from langchain_ollama import ChatOllama
 from langchain_core.output_parsers import StrOutputParser
@@ -13,7 +13,7 @@ from langchain_core.prompts import PromptTemplate
 loader = WebBaseLoader(
     web_paths=("https://www.bbc.com/korean/articles/cl4yml4l6j1o",),
     bs_kwargs=dict(
-        parse_only=bs4.SoupStrainer("div", attrs={"class": ["bbc-1cvxiy9"]})
+        parse_only=bs4.SoupStrainer("div", attrs={"class": ["css-1nude9v"]})
     ),
 )
 docs = loader.load()
@@ -26,7 +26,7 @@ print(f"split size: {len(splits)}")
 
 # 3. 벡터 저장소 구축 (Vector Database)
 embeddings = OllamaEmbeddings(model="bge-m3")
-vector_store = FAISS.from_documents(documents=splits, embedding=embeddings)
+vector_store = Chroma.from_documents(documents=splits, embedding=embeddings)
 retriever = vector_store.as_retriever()
 
 # 4. LLM 준비
