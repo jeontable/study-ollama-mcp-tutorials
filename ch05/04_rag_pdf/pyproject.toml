@@ -4,11 +4,11 @@ version = "0.1.0"
 description = "Ollama, LangChain, FAISS, PDF 문서 임베딩 및 질의응답 챗봇 예제 (ch07/01_tracing_project)"
 requires-python = ">=3.10"
 dependencies = [
-    "langchain-core==0.3.61",
-    "langchain-ollama==0.3.3",
-    "langchain==0.3.25",
-    "langchain-community",
-    "langchain-text-splitters",
-    "faiss-cpu",
-    "pypdf",
+    "langchain-chroma>=1.1.0",
+    "langchain-community>=0.4.2",
+    "langchain-core>=1.5.3",
+    "langchain-google-genai>=4.3.2",
+    "langchain-ollama>=1.1.0",
+    "langchain-text-splitters>=1.1.2",
+    "pypdf>=6.14.2",
 ]

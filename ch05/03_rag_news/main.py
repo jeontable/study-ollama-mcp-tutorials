@@ -6,8 +6,13 @@ from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
 
 from langchain_ollama import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
+
+from dotenv import load_dotenv
+
+load_dotenv()  # .env 파일 로드
 
 # 1. 문서 로딩 (Document Loading)
 loader = WebBaseLoader(
@@ -41,6 +46,7 @@ prompt = PromptTemplate.from_template(
 #Answer:"""
 )
 llm = ChatOllama(model="qwen3:8b", temperature=0)
+#llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
 chain = prompt | llm | StrOutputParser()
 question = "극한 호우의 원인은 무엇인가?"
 

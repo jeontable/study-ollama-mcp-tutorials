@@ -3,11 +3,17 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 
 from langchain_ollama import OllamaEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain_chroma import Chroma
 
 from langchain_ollama import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
+
+from dotenv import load_dotenv
+
+load_dotenv()  # .env 파일 로드
+
 
 # 벡터 DB 파일 경로
 VECTOR_DB_PATH = "faiss_index"
@@ -29,13 +35,11 @@ def create_vector_db():
     embeddings = OllamaEmbeddings(model="bge-m3")
 
     # 1-4. 벡터 저장소 구축 (Vector Database)
-    vector_store = FAISS.from_documents(
+    vector_store = Chroma.from_documents(
         documents=splits,
         embedding=embeddings,
+        persist_directory=VECTOR_DB_PATH
     )
-
-    # 1-5. 벡터 DB를 로컬에 저장
-    vector_store.save_local(VECTOR_DB_PATH)
 
     return vector_store
 
@@ -44,11 +48,7 @@ def create_vector_db():
 if os.path.exists(VECTOR_DB_PATH):
     print("기존 벡터 DB를 로드합니다.")
     embeddings = OllamaEmbeddings(model="bge-m3")
-    vector_store = FAISS.load_local(
-        VECTOR_DB_PATH,
-        embeddings,
-        allow_dangerous_deserialization=True,  # 믿을 수 있는 소스임을 확인
-    )
+    vector_store = Chroma(persist_directory=VECTOR_DB_PATH, embedding_function=embeddings)
 else:
     print("새로운 벡터 DB를 생성합니다.")
     vector_store = create_vector_db()
@@ -71,6 +71,7 @@ prompt = PromptTemplate.from_template(
 
 # 5. Ollama 초기화
 llm = ChatOllama(model="qwen3:8b", temperature=0)
+#llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
 
 # 6. 체인을 생성합니다.
 chain = prompt | llm | StrOutputParser()
