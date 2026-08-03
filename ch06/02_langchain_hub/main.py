@@ -1,9 +1,10 @@
 import bs4
 from dotenv import load_dotenv
-from langchain import hub
+from langsmith import Client
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.output_parsers import StrOutputParser
 from langchain_ollama import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()  # .env 파일 로드
 
@@ -16,7 +17,7 @@ loader = WebBaseLoader(
     bs_kwargs=dict(
         parse_only=bs4.SoupStrainer(
             "div",
-            attrs={"class": ["bbc-1cvxiy9", "bbc-fa0wmp"]},
+            attrs={"class": ["css-bg8vrv", "css-1nude9v"]},
         )
     ),
 )
@@ -24,10 +25,16 @@ news_array = loader.load()
 news = news_array[0]
 
 # 3. 요약에 사용할 프롬프트 불러오기
-prompt = hub.pull("hellollama/news_summary")
+client = Client()
+
+prompt = client.pull_prompt(
+    "hellollama/news_summary",
+    dangerously_pull_public_prompt=True,
+)
 
 # 4. Ollama 초기화
 llm = ChatOllama(model="qwen3:8b", temperature=0)
+#llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
 
 # 5. 프롬프트를 실행할 체인생성
 summary_chain = prompt | llm | StrOutputParser()
