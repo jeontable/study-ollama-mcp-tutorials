@@ -1,3 +1,6 @@
+from langchain_core.globals import set_debug
+set_debug(True)
+
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, AIMessageChunk
 from langchain_ollama import ChatOllama

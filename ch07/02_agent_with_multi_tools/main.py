@@ -1,3 +1,6 @@
+from langchain_core.globals import set_debug
+set_debug(True)
+
 from dotenv import load_dotenv
 from langchain.agents import Tool
 from langchain.agents.agent import AgentExecutor

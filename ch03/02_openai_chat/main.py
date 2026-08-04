@@ -1,3 +1,6 @@
+from langchain_core.globals import set_debug
+set_debug(True)
+
 from langchain_core.messages import HumanMessage 
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv

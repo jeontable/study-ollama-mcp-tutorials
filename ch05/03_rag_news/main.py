@@ -1,3 +1,6 @@
+from langchain_core.globals import set_debug
+set_debug(True)
+
 import bs4
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader

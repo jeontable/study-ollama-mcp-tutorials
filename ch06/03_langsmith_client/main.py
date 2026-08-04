@@ -1,3 +1,6 @@
+from langchain_core.globals import set_debug
+set_debug(True)
+
 import os
 from dotenv import load_dotenv
 from langsmith import Client
