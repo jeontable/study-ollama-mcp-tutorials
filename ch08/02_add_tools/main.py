@@ -6,9 +6,8 @@ import os
 from typing import Annotated
 
 from dotenv import load_dotenv
-from langchain.agents import Tool
 from langchain.chat_models import init_chat_model
-from langchain_community.tools.tavily_search.tool import TavilySearchResults
+from langchain_tavily import TavilySearch
 from langchain_core.messages import ToolMessage
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
@@ -24,15 +23,17 @@ class State(TypedDict):
 
 
 # 2. 도구 추가
-search_tool = Tool(
+search_tool = TavilySearch(
     name="WebSearch",
-    func=TavilySearchResults().run,
     description="This is a real-time web search tool (based on Tavily service)",
+    max_results=5,
+    topic="general",
 )
 tools = [search_tool]
 
 # 3. 모델 초기화
-llm = init_chat_model("openai:gpt-4.1-mini")
+#llm = init_chat_model("openai:gpt-4.1-mini")
+llm = init_chat_model("google_genai:gemini-2.5-flash")
 llm_with_tools = llm.bind_tools(tools)
 
 # 4. 그래프 빌더 생성
