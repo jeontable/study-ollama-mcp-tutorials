@@ -18,6 +18,7 @@ class State(TypedDict):
 
 # 2. 모델 초기화
 llm = init_chat_model("ollama:qwen3:8b")
+#llm = init_chat_model("google_genai:gemini-2.5-flash")
 
 # 3. 그래프 빌더 생성
 graph_builder = StateGraph(State)
