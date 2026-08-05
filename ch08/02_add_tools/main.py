@@ -22,6 +22,30 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
 
 
+def get_message_text(message) -> str:
+    """메시지 content가 문자열/블록 리스트 모두일 때 안전하게 텍스트를 추출"""
+    content = getattr(message, "content", "")
+
+    if isinstance(content, str):
+        return content
+
+    if isinstance(content, list):
+        parts = []
+        for block in content:
+            if isinstance(block, str):
+                parts.append(block)
+            elif isinstance(block, dict) and block.get("type") == "text":
+                text = block.get("text")
+                if isinstance(text, str):
+                    parts.append(text)
+
+        if parts:
+            return "".join(parts)
+
+    # text 블록이 없으면 구조를 확인할 수 있게 문자열로 폴백
+    return str(content)
+
+
 # 2. 도구 추가
 search_tool = TavilySearch(
     name="WebSearch",
@@ -32,8 +56,8 @@ search_tool = TavilySearch(
 tools = [search_tool]
 
 # 3. 모델 초기화
-#llm = init_chat_model("openai:gpt-4.1-mini")
-llm = init_chat_model("google_genai:gemini-2.5-flash")
+llm = init_chat_model("openai:gpt-4.1-mini")
+#llm = init_chat_model("google_genai:gemini-2.5-flash")
 llm_with_tools = llm.bind_tools(tools)
 
 # 4. 그래프 빌더 생성
@@ -139,7 +163,7 @@ while True:
             {"messages": [{"role": "user", "content": user_input}]}
         ):
             for value in event.values():
-                print("Assistant:", value["messages"][-1].content)
+                print("Assistant:", get_message_text(value["messages"][-1]))
     except Exception as e:
         print(f"Error while running the chatbot: {e}")
         break
