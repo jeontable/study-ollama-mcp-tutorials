@@ -1,14 +1,13 @@
-from langchain_core.globals import set_debug
-set_debug(True)
+# from langchain_core.globals import set_debug
+# set_debug(True)
 
 import os
 import uuid
 from typing import Annotated
 
 from dotenv import load_dotenv
-from langchain.agents import Tool
 from langchain.chat_models import init_chat_model
-from langchain_community.tools.tavily_search.tool import TavilySearchResults
+from langchain_tavily import TavilySearch
 from langchain_core.tools import tool
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
@@ -28,10 +27,11 @@ class State(TypedDict):
 
 # 2. 도구 추가
 # 2-1. 웹 검색 도구
-search_tool = Tool(
+search_tool = TavilySearch(
     name="WebSearch",
-    func=TavilySearchResults().run,
     description="This is a real-time web search tool (based on Tavily service)",
+    max_results=5,
+    topic="general",
 )
 
 
@@ -47,6 +47,7 @@ tools = [search_tool, human_assistance]
 
 # 3. 모델 초기화
 llm = init_chat_model("openai:gpt-4.1-mini")
+#llm = init_chat_model("google_genai:gemini-2.5-flash")
 llm_with_tools = llm.bind_tools(tools)
 
 # 4. 그래프 빌더 생성
@@ -143,7 +144,10 @@ while True:
                 if "messages" in event:
                     # 마지막 메시지 출력
                     last_msg = event["messages"][-1]
-                    last_msg.pretty_print()
+                    if isinstance(last_msg.content, list) and last_msg.content[0].get("type") == "text":
+                        print(last_msg.content[0].get("text"))
+                    else:
+                        last_msg.pretty_print()
 
                     # human_assistance 도구의 인터럽트 감지
                     if (

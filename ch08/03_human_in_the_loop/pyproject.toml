@@ -8,12 +8,12 @@ version = "0.1.0"
 description = "기본 챗봇 예제"
 requires-python = ">=3.10"
 dependencies = [
-    "langchain-core==0.3.61",
-    "langchain-ollama==0.3.3",
-    "langchain==0.3.25",
-    "langchain-openai",
-    "langgraph",
-    "python-dotenv",
-    "langchain-community",
-    "typing-extensions"
+    "langchain>=1.3.14",
+    "langchain-core>=1.5.3",
+    "langchain-google-genai>=4.3.3",
+    "langchain-openai>=1.4.3",
+    "langchain-tavily>=0.2.18",
+    "langgraph>=1.2.10",
+    "python-dotenv>=1.2.2",
+    "typing-extensions>=4.16.0",
 ]
