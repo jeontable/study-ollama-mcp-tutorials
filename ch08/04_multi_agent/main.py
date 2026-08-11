@@ -6,15 +6,14 @@ import uuid
 from typing import Annotated
 
 from dotenv import load_dotenv
-from langchain.agents import Tool
 from langchain.chat_models import init_chat_model
-from langchain_community.tools.tavily_search.tool import TavilySearchResults
+from langchain_tavily import TavilySearch
 from langchain_core.messages import SystemMessage
 from langchain_core.tools import tool
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 from typing_extensions import TypedDict
 
 # 환경 변수 로드 (.env 파일에서 API 키 등을 로드)
@@ -29,10 +28,11 @@ class AgentState(TypedDict):
 
 # 2. 도구 추가
 # 2-1. 웹 검색 도구
-search_tool = Tool(
+search_tool = TavilySearch(
     name="WebSearch",
-    func=TavilySearchResults().run,
     description="This is a real-time web search tool (based on Tavily service)",
+    max_results=5,
+    topic="general",
 )
 
 
@@ -46,10 +46,10 @@ def save_file(filename: str, content: str) -> str:
 
 
 # 3. 모델 초기화, 검색 및 편집 에이전트 생성
-llm = init_chat_model("openai:gpt-4.1-mini")
-search_agent = create_react_agent(llm, [search_tool])
-editor_agent = create_react_agent(llm, [save_file])
-
+#llm = init_chat_model("openai:gpt-4.1-mini")
+llm = init_chat_model("google_genai:gemini-2.5-flash")
+search_agent = create_agent(llm, [search_tool])
+editor_agent = create_agent(llm, [save_file])
 
 # 4. Supervisor 시스템 메시지 정의
 supervisor_system_message = """당신은 작업을 관리하는 Supervisor입니다. 
